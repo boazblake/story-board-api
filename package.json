@@ -1,0 +1,27 @@
+{
+  "name": "baca-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "bblake <bblake@goempyrean.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "data.task": "^3.1.2",
+    "dotenv": "^16.0.0",
+    "dotenv-expand": "^9.0.0",
+    "express": "^4.17.3",
+    "express-winston": "^4.2.0",
+    "node-fetch": "^3.2.10",
+    "ramda": "^0.28.0",
+    "uuid": "^8.3.2",
+    "winston": "^3.8.2",
+    "winston-express": "^0.1.1"
+  }
+}

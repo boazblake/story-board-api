@@ -11,8 +11,10 @@ const getAddressByIdTask = (addressId) => {
 const getLocationsByLimitTask = (limit) =>
   http.back4App.getTask({ url: `classes/Addresses?limit=${limit}` }).map(prop('results'))
 
+const updateLocationByIdTask = (id, address) =>
+  http.back4App.getTask({ url: `classes/Addresses/${id}`, body: address }).map(prop('results'))
 
 export {
   getAddressByIdTask,
-  getLocationsByLimitTask
+  getLocationsByLimitTask, updateLocationByIdTask
 }

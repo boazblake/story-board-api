@@ -1,5 +1,6 @@
 import http from '../../http.js'
 import { prop, head } from 'ramda'
+import { log } from '../../utils.js'
 
 const findAccountByUserIdTask = (encodedId) =>
   http.back4App.getTask({ url: `Classes/Accounts?${encodedId}` }).map(prop('results')).map(head)
@@ -31,7 +32,12 @@ const getUserAcountProfileById = (user, encodeId) =>
     )
     .map(head)
 
+const updateAccountByAccountId = (accountId, account) =>
+  http.back4App
+    .putTask({ url: `classes/Accounts/${accountId}`, body: JSON.stringify(account) }).map(log('??'))
+
 export {
+  updateAccountByAccountId,
   findAccountByUserIdTask,
   createNewUserAccountTask,
   getUserAcountProfileById

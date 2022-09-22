@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 
 
 router.get('/:userId', (req, res) => {
-  const userId = req.param('userId')
+  const userId = req.params.userId
   let encodeId = encodeURI(`where={"userId":"${userId}"}`)
 
   const onSuccess = (invoices) => res.json(({ results: invoices }))

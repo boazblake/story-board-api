@@ -2,7 +2,7 @@ import http from '../../http.js'
 import { prop, map, reverse } from 'ramda'
 import { log, formatDate } from '../../utils.js'
 
-const saveDuesTask = (invoice) => http.back4App.postTask({ url: `classes/Dues`, body: invoice }).map(prop('results'))
+const saveDuesTask = (dues) => http.back4App.postTask({ url: `classes/Dues`, body: dues }).map(prop('results'))
 
 const toDuesVM = ({ date, createdAt, status, full_name, address, email }) => {
   return date
@@ -28,7 +28,10 @@ const findUserDuesByIdTask = (encodeId) =>
     .map(prop("results"))
     .map(map(toDuesVM))
     .map(reverse)
-    .map(log('?'))
+
+const getDuesTask = () =>
+  http.back4App.getTask({ url: 'classes/Dues' })
+    .map(prop("results"))
 
 
-export { saveDuesTask, findUserDuesByIdTask }
+export { saveDuesTask, findUserDuesByIdTask, getDuesTask }

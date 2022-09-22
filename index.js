@@ -39,6 +39,7 @@ app.use('/api/blogs', routes.blogs)
 app.use('/api/gallery', routes.gallery)
 app.use('/api/accounts', routes.accounts)
 app.use('/api/invoices', routes.invoices)
+app.use('/api/dues', routes.dues)
 app.use('/api/geo', routes.geo)
 // app.use('/users', routes.user);
 // app.use('/messages', routes.message);

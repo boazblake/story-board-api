@@ -1,31 +1,31 @@
 import { Router } from 'express'
-import { findAccountByUserIdTask } from './model.js'
+import { findAccountByUserIdTask, updateAccountByAccountId } from './model.js'
 const router = Router()
 
-// router.post('/', (req, res) => {
-//   const user = req.body
-
-//   const onSuccess = (account) => res.json(({ results: account }))
-//   const onError = (error) => {
-//     console.log('errror on login', error)
-//     return res.body = error
-//   }
-
-//   return createNewUserAccountTask(user).fork(onError, onSuccess)
-// })
-
-
 router.get('/:userId', (req, res) => {
-  const userId = req.param('userId')
-  let encodeId = encodeURI(`where={"userId":"${userId}"}`)
+  const userId = req.params.userId
+  const encodedId = encodeURI(`where={"userId":"${userId}"}`)
 
   const onSuccess = (account) => res.json(({ results: account }))
   const onError = (error) => {
-    console.log('errror on login', error)
+    console.log('errror on get account', error)
     return res.body = error
   }
 
-  return findAccountByUserIdTask(encodeId).fork(onError, onSuccess)
+  return findAccountByUserIdTask(encodedId).fork(onError, onSuccess)
+})
+
+router.put('/:accountId', (req, res) => {
+  const accountId = req.params.accountId
+  const account = req.body
+
+  const onSuccess = (account) => { console.log('sx', account); res.json(({ results: account })) }
+  const onError = (error) => {
+    console.log('error on update account', error)
+    return res.body = error
+  }
+
+  return updateAccountByAccountId(accountId, account).fork(onError, onSuccess)
 })
 
 export default router

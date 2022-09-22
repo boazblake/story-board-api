@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { loginTask, getUserTask, registerTask } from './model.js'
+import { loginTask, getUserTask, registerTask, getUsersTask, updateUserTask } from './model.js'
 const router = Router();
 
 router.get('/isAuth', (req, res) => {
@@ -46,32 +46,31 @@ router.post('/register', (req, res) => {
 });
 
 
-router.get('/account/:userId', (req, res) => {
-  const userId = req.param('userId')
-  const onSuccess = ({
-    profile,
-    dues,
-    messages,
-    addresses,
-  }) => {
-    // console.log('success on login', model, { account, user, dues })
-    return res.json(({
-      results: {
-        profile,
-        dues,
-        messages,
-        addresses,
-      }
-    }))
+router.get('/users', (req, res) => {
+  const onSuccess = (users) => {
+    return res.json(({ results: users }))
   }
   const onError = (error) => {
-    console.log('errror on login', error)
     return res.body = error
   }
 
-  // return findUserAcountProfileByIdTask(userId).fork(onError, onSuccess)
-});
+  return getUsersTask().fork(onError, onSuccess)
+})
 
+router.put('/users/:userId', (req, res) => {
+  const user = req.body
+  const userId = req.params.userId
 
+  const onSuccess = (user) => {
+    // console.log('success on login', user)
+    return res.json(({ results: user }))
+  }
+  const onError = (error) => {
+    // console.log('errror on login', error)
+    return res.body = error
+  }
+
+  return updateUserTask(userId, user).fork(onError, onSuccess)
+})
 
 export default router;

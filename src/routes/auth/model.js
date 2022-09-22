@@ -1,7 +1,7 @@
 import http from '../../http.js'
 import Task from 'data.task'
 import { model } from '../../model.js'
-import { compose, map, chain } from 'ramda'
+import { compose, map, chain, prop } from 'ramda'
 import { findAccountByUserIdTask } from '../accounts/model.js'
 import { findUserDuesByIdTask } from '../dues/model.js'
 
@@ -34,28 +34,13 @@ const getUserTask = () => http.back4App.getTask({ url: `users/me` }).map(updateS
 const registerTask = user => http.back4App.postTask({ url: `users`, body: JSON.stringify(user) })
 
 
-// const profileTask = id => getUserAccountTask
+const getUsersTask = () => http.back4App.getTask({ url: `users` }).map(prop('results'))
 
-// const findUserAcountProfileByIdTask = userId => {
-//   let id = encodeURI(`where={"userId":"${userId}"}`)
-//   return Task.of((profile) => (dues) => (messages) => (addresses) => {
-//     return {
-//       profile,
-//       dues,
-//       messages,
-//       addresses,
-//     }
-//   })
-//     .ap(profileTask(id))
-//     .ap(findDuesTask(id))
-//     .ap(findMessagesTask(id))
-//     .ap(findAddressesTask(mdl)(mdl.data.account.addressIds))
-// }
-
+const updateUserTask = (userId, user) => http.back4App.putTask({ url: `users/${userId}`, body: JSON.stringify(user) })
 
 export {
   loginTask,
   getUserTask,
   getUserInfoTask,
-  registerTask,
+  registerTask, getUsersTask, updateUserTask
 }

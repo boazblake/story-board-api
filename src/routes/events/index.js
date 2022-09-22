@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getEvents } from './model.js'
+import { getEventsTask } from './model.js'
 const router = Router()
 
 router.get('/', (_, res) => {
@@ -9,7 +9,7 @@ router.get('/', (_, res) => {
     return res.body = error
   }
 
-  return getEvents().fork(onError, onSuccess)
+  return getEventsTask().fork(onError, onSuccess)
 })
 
 export default router

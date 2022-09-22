@@ -1,6 +1,19 @@
 import { Router } from 'express'
-import { getAccountByUserId } from './model.js'
+import { findAccountByUserIdTask } from './model.js'
 const router = Router()
+
+// router.post('/', (req, res) => {
+//   const user = req.body
+
+//   const onSuccess = (account) => res.json(({ results: account }))
+//   const onError = (error) => {
+//     console.log('errror on login', error)
+//     return res.body = error
+//   }
+
+//   return createNewUserAccountTask(user).fork(onError, onSuccess)
+// })
+
 
 router.get('/:userId', (req, res) => {
   const userId = req.param('userId')
@@ -12,7 +25,7 @@ router.get('/:userId', (req, res) => {
     return res.body = error
   }
 
-  return getAccountByUserId(encodeId).fork(onError, onSuccess)
+  return findAccountByUserIdTask(encodeId).fork(onError, onSuccess)
 })
 
 export default router

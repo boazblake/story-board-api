@@ -12,6 +12,8 @@ const dotEnv = () => {
   return dotenvExpand.expand(e)
 }
 
+const formatDate = date => date.split('T')[0]
+
 export {
-  log, dotEnv,
+  log, dotEnv, formatDate
 }

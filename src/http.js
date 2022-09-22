@@ -67,7 +67,7 @@ const toUrl = url => `${env.BACK4APP_BASEURL}/${url}`
 
 const back4App = {
   getTask: ({ url }) => fetchTask({ url: toUrl(url), _headers: BACK4APP_HEADERS(), method: 'GET', body: null }),
-  postTask: ({ url, body }) => fetchTask({ url: toUrl(url), _headers: BACK4APP_HEADERS(), method: 'POST', body }),
+  postTask: ({ url, body }) => { console.log('dto', body); return fetchTask({ url: toUrl(url), _headers: BACK4APP_HEADERS(), method: 'POST', body }) },
   putTask: ({ url, body }) => fetchTask({ url: toUrl(url), _headers: BACK4APP_HEADERS(), method: 'PUT', body }),
   deleteTask: ({ url }) => fetchTask({ url: toUrl(url), _headers: BACK4APP_HEADERS(), method: 'DELETE', body: null }),
 }

@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getGallery } from './model.js'
+import { getGalleryTask } from './model.js'
 const router = Router()
 
 router.get('/', (_, res) => {
@@ -9,7 +9,7 @@ router.get('/', (_, res) => {
     return res.body = error
   }
 
-  return getGallery().fork(onError, onSuccess)
+  return getGalleryTask().fork(onError, onSuccess)
 })
 
 export default router

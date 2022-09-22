@@ -1,19 +1,17 @@
 import Task from "data.task"
 import fetch from 'node-fetch'
 import { model } from './model.js'
-import { dotEnv } from './utils.js'
+import { dotEnv, log } from './utils.js'
 dotEnv()
 const env = process.env
 
-const BACK4APP_HEADERS = () => ({
+const BACK4APP_HEADERS = (cachCall) => ({
   "content-type": "application/json",
   "X-Parse-Application-Id": env.BACK4APP_APPID,
   "X-Parse-REST-API-Key": env.BACK4APP_APIKEY,
   "X-Parse-Revocable-Session": 1,
   "X-Parse-Session-Token": model.sessionToken || "",
-  // ...(user.sessionToken && {
-  //   "X-Parse-Session-Token": user.sessionToken,
-  // }),
+  ...cachCall,
   ...(model.user.role == "admin" && {
     "X-Parse-Master-Key": env.BACK4APP_MASTERKEY,
   }),
@@ -56,31 +54,44 @@ const lookupLocationTask = (query) => {
 //     fetchTask(PAYPAL.sandbox.headers(PAYPAL))("PUT")(mdl)(paypalUrl + url)(dto),
 // }
 
-// const cachCall = (url) =>
-//   url == "users/me"
-//     ? { "Cache-Control": "private" }
-//     : {
-//       "If-Modified-Since": new Date(),
-//       "Cache-Control": "public, max-age=604800",
-//     }
+const cachCall = (url) =>
+  url == "users/me"
+    ? { "Cache-Control": "private" }
+    : {
+      "If-Modified-Since": new Date(),
+      "Cache-Control": "public, max-age=604800",
+    }
+
+
 const toUrl = url => `${env.BACK4APP_BASEURL}/${url}`
 
+const back4appHeaders = url => BACK4APP_HEADERS(cachCall(url))
+
+
 const back4App = {
-  getTask: ({ url }) => fetchTask({ url: toUrl(url), _headers: BACK4APP_HEADERS(), method: 'GET', body: null }),
-  postTask: ({ url, body }) => { console.log('dto', body); return fetchTask({ url: toUrl(url), _headers: BACK4APP_HEADERS(), method: 'POST', body }) },
-  putTask: ({ url, body }) => fetchTask({ url: toUrl(url), _headers: BACK4APP_HEADERS(), method: 'PUT', body }),
-  deleteTask: ({ url }) => fetchTask({ url: toUrl(url), _headers: BACK4APP_HEADERS(), method: 'DELETE', body: null }),
+  getTask: ({ url }) => fetchTask({ url: toUrl(url), _headers: back4appHeaders(url), method: 'GET', body: null }),
+  postTask: ({ url, body }) => fetchTask({ url: toUrl(url), _headers: back4appHeaders(url), method: 'POST', body }),
+  putTask: ({ url, body }) => fetchTask({ url: toUrl(url), _headers: back4appHeaders(url), method: 'PUT', body }),
+  deleteTask: ({ url }) => fetchTask({ url: toUrl(url), _headers: back4appHeaders(url), method: 'DELETE', body: null }),
 }
 
-// const imgBB = {
-//   postTask: (mdl) => (file) => {
-//     const image = new FormData()
-//     image.append("image", file)
-//     image.set("key", IMGBB.apiKey)
 
-//     return fetchTask()("POST")(mdl)(`${IMGBB.url}?key=${IMGBB.apiKey}`)(image)
-//   },
-// }
+const formatDeleteUrl = url => url.replace('https://ibb.co/', '').replace('/', '_')
+const toImageViewModel = album => ({ data: { delete_url, display_url, thumb: { url } } }) =>
+  ({ deleteUrl: formatDeleteUrl(delete_url), image: display_url, thumb: url, album })
+
+
+const imgBB = {
+  deleteTask: (url) => fetchTask({ url, method: "DELETE" }),
+  postTask: (album, file) => {
+    const image = new URLSearchParams()
+    image.append("image", file)
+    image.set("key", env.IMGBB_APIKEY)
+
+    return fetchTask({ url: `${env.IMGBB_URL}?key=${env.IMGBB_APIKEY}`, method: "POST", body: image })
+      .map(toImageViewModel(album))
+  },
+}
 
 // const OpenCageUrl = `${OpenCage.baseUrl}?key=${OpenCage.key}&q=`
 
@@ -96,7 +107,7 @@ const back4App = {
 // }
 
 const http = {
-  // imgBB,
+  imgBB,
   // openCage,
   back4App,
   // paypal,

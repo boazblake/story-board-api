@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getGalleryTask, saveImageTask, deleteImageTask, getAlbumByEncodedNameTask } from './model.js'
+import { getGalleryTask, saveImageTask, saveImagesTask, deleteImageTask, getAlbumByEncodedNameTask, deleteImagesTask, getImageByIdTask } from './model.js'
 const router = Router()
 
 router.get('/', (_, res) => {
@@ -25,19 +25,34 @@ router.get('/:albumName', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  const image = req.body
+  const { album, image } = req.body
 
   const onSuccess = (image) => res.json(({ results: image }))
   const onError = (error) => {
-    console.log('error on saving image', error)
+    console.log('error on saving images', error)
     return res.body = error
   }
 
-  return saveImageTask(image).fork(onError, onSuccess)
+  return saveImageTask(album, image).fork(onError, onSuccess)
 })
 
-router.delete('/imageId', (req, res) => {
+
+router.post('/:album', (req, res) => {
+  const images = req.body
+  const album = req.params.album
+
+  const onSuccess = (image) => res.json(({ results: image }))
+  const onError = (error) => {
+    console.log('error on saving images', error)
+    return res.body = error
+  }
+
+  return saveImagesTask(album, images).fork(onError, onSuccess)
+})
+
+router.delete('/:imageId', (req, res) => {
   const imageId = req.params.imageId
+
 
   const onSuccess = (image) => res.json(({ results: image }))
   const onError = (error) => {
@@ -46,6 +61,32 @@ router.delete('/imageId', (req, res) => {
   }
 
   return deleteImageTask(imageId).fork(onError, onSuccess)
+})
+
+router.get('/album/:imageId', (req, res) => {
+  const imageId = req.params.imageId
+
+  const onSuccess = (image) => res.json(({ results: image }))
+  const onError = (error) => {
+    console.log('error on fetching image', error)
+    return res.body = error
+  }
+
+  return getImageByIdTask(imageId).fork(onError, onSuccess)
+})
+
+router.delete('/album/:album', (req, res) => {
+  const album = req.params.album
+  const encodedName = encodeURI(`where={"album":"${album}"}`)
+
+  const onSuccess = (image) => res.json(({ results: image }))
+  const onError = (error) => {
+    console.log('error on deleteing image', error)
+    return res.body = error
+  }
+
+  console.log(album, encodedName)
+  return deleteImagesTask(encodedName).fork(onError, onSuccess)
 })
 
 

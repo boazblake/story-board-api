@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getBlogsTask, findBlogByBlogIdTask, deleteBlogTask } from './model.js'
+import { getBlogsTask, findBlogByBlogIdTask, deleteBlogTask, createBlogPostTask, updateBlogPostTask } from './model.js'
 const router = Router()
 
 
@@ -14,10 +14,35 @@ router.get('/', (_, res) => {
   return getBlogsTask().fork(onError, onSuccess)
 })
 
+router.post('/', (req, res) => {
+  const blog = req.body
+  const onSuccess = (blogs) => res.json(({ results: blogs }))
+
+  const onError = (error) => {
+    console.log('errror on login', error)
+    return res.body = error
+  }
+
+  return createBlogPostTask(blog).fork(onError, onSuccess)
+})
+
+
+router.put('/:blogId', (req, res) => {
+  const blogId = req.params.blogId
+  const blog = req.body
+  const onSuccess = (blogs) => res.json(({ results: blogs }))
+
+  const onError = (error) => {
+    console.log('errror on login', error)
+    return res.body = error
+  }
+
+  return updateBlogPostTask(blogId, blog).fork(onError, onSuccess)
+})
 
 router.get('/:blogId', (req, res) => {
   const blogId = req.params.blogId
-  const onSuccess = (blogs) => res.json(({ results: blogs }))
+  const onSuccess = (blog) => res.json(({ results: blog }))
 
   const onError = (error) => {
     console.log('errror on login', error)
@@ -28,7 +53,7 @@ router.get('/:blogId', (req, res) => {
 })
 
 
-router.delete('/blogId', (req, res) => {
+router.delete('/:blogId', (req, res) => {
   const blogId = req.params.blogId
 
   const onSuccess = (blog) => res.json(({ results: blog }))

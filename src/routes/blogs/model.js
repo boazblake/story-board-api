@@ -1,15 +1,15 @@
 import http from '../../http.js'
-import { prop, } from 'ramda'
-import { log } from '../../utils.js'
+import { prop, reverse } from 'ramda'
 
-const getBlogsTask = () => http.back4App.getTask({ url: `Classes/Blogs` }).map(prop('results'))
+const getBlogsTask = () => http.back4App.getTask({ url: `Classes/Blogs` }).map(prop('results')).map(reverse)
 
 const findBlogByBlogIdTask = (blogId) => http.back4App.getTask({ url: `Classes/Blogs/${blogId}` })
-  // .map(prop('results'))
-  .map(log('blog??'))
 
 const deleteBlogTask = (blogId) => http.back4App.deleteTask({ url: `Classes/Blogs/${blogId}` })
-  // .map(prop('results'))
-  .map(log('delete??'))
 
-export { findBlogByBlogIdTask, getBlogsTask, deleteBlogTask }
+const createBlogPostTask = blog => http.back4App.postTask({ url: `Classes/Blogs`, body: JSON.stringify(blog) })
+
+const updateBlogPostTask = (blogId, blog) =>
+  http.back4App.putTask({ url: `Classes/Blogs/${blogId}`, body: JSON.stringify(blog) })
+
+export { findBlogByBlogIdTask, getBlogsTask, deleteBlogTask, createBlogPostTask, updateBlogPostTask }

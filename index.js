@@ -1,9 +1,11 @@
 import Logger from './logging.js'
 import cors from 'cors';
+import compression from 'compression'
 import express from 'express';
 import routes from './src/routes/index.js';
 import { dotEnv } from './src/utils.js'
 import { model } from './src/model.js'
+
 dotEnv()
 
 
@@ -15,6 +17,7 @@ const app = express();
 // Third-Party Middleware
 
 app.use(cors());
+app.use(compression());
 
 // Built-In Middleware
 
@@ -25,7 +28,7 @@ app.use(Logger())
 // Custom Middleware
 
 
-app.use((req, res, next) => {
+app.use((req, _, next) => {
   model.sessionToken = req.get('session-token')
   model.user.role = req.get('user-role')
   next();
@@ -38,7 +41,6 @@ app.use('/api/events', routes.events)
 app.use('/api/blogs', routes.blogs)
 app.use('/api/gallery', routes.gallery)
 app.use('/api/accounts', routes.accounts)
-app.use('/api/invoices', routes.invoices)
 app.use('/api/dues', routes.dues)
 app.use('/api/geo', routes.geo)
 // app.use('/users', routes.user);

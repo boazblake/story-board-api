@@ -14,6 +14,9 @@ const dotEnv = () => {
 
 const formatDate = date => date.split('T')[0]
 
+const getErrorCode = ({ code }) =>
+  [-1, 1, 2, 4].includes(code) ? 500 : 400
+
 export {
-  log, dotEnv, formatDate
+  log, dotEnv, formatDate, getErrorCode
 }

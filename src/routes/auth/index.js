@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { loginTask, getUserTask, registerTask, getUsersTask, updateUserTask } from './model.js'
+import { getErrorCode } from '../../utils.js'
 const router = Router();
 
 router.get('/isAuth', (req, res) => {
@@ -23,8 +24,9 @@ router.post('/login', (req, res) => {
     return res.json(({ results: { account, user, dues } }))
   }
   const onError = (error) => {
-    console.log('errror on login', error)
-    return res.body = error
+    console.log('error on login', error)
+    res.status(getErrorCode(error))
+    return res.json(error)
   }
 
   return loginTask(user).fork(onError, onSuccess)
@@ -38,8 +40,8 @@ router.post('/register', (req, res) => {
     return res.json(({ results: user }))
   }
   const onError = (error) => {
-    // console.log('errror on login', error)
-    return res.body = error
+    res.status(getErrorCode(error))
+    return res.json(error)
   }
 
   return registerTask(user).fork(onError, onSuccess)
@@ -51,7 +53,9 @@ router.get('/users', (req, res) => {
     return res.json(({ results: users }))
   }
   const onError = (error) => {
-    return res.body = error
+    console.log('error on registr', error)
+    res.status(getErrorCode(error))
+    return res.json(error)
   }
 
   return getUsersTask().fork(onError, onSuccess)
@@ -67,7 +71,9 @@ router.put('/users/:userId', (req, res) => {
   }
   const onError = (error) => {
     // console.log('errror on login', error)
-    return res.body = error
+    console.log('error on updating user', error)
+    res.status(getErrorCode(error))
+    return res.json(error)
   }
 
   return updateUserTask(userId, user).fork(onError, onSuccess)

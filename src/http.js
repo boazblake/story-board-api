@@ -20,6 +20,17 @@ const BACK4APP_HEADERS = (cachCall) => ({
 
 })
 
+const toError = (url, res, rej) => data => {
+  if (url.includes('baca')) {
+    return data.code ? rej(data) : res(data)
+  }
+  if (url.includes('opencagedata')) {
+    return data.status.code == 200 ? res(data) : rej(data.status)
+  }
+  return res(data)
+}
+
+
 const fetchTask = ({ url, _headers, method, body }) => new Task(
   (rej, res) => fetch(url, {
     method,
@@ -28,7 +39,9 @@ const fetchTask = ({ url, _headers, method, body }) => new Task(
     },
     body,
     withCredentials: false,
-  }).then(x => x.json()).then(res, rej))
+  })
+    .then(x => x.json())
+    .then(toError(url, res, rej), rej))
 
 const lookupLocationTask = (query) => {
   return new Task((rej, res) =>
@@ -93,22 +106,16 @@ const imgBB = {
   },
 }
 
-// const OpenCageUrl = `${OpenCage.baseUrl}?key=${OpenCage.key}&q=`
+const OpenCageUrl = (query, encodedBounds) =>
+  `${env.OPENCAGE_BASEURL}?key=${env.OPENCAGE_KEY}&q=${query}&pretty=1&countrycode=us&encodedBounds=${encodedBounds}`
 
-// const openCage = {
-//   getLocationTask: (mdl) => (query) =>
-//     fetchTask(OpenCage.headers())("GET")(mdl)(
-//       OpenCageUrl +
-//       query +
-//       `&pretty=1&countrycode=us&bounds=${encodeURIComponent(
-//         mdl.Map.bounds()
-//       )}`
-//     )(null),
-// }
-
+const openCageTask = (query, encodedBounds) =>
+  fetchTask({
+    url: OpenCageUrl(query, encodedBounds)
+  })
 const http = {
   imgBB,
-  // openCage,
+  openCageTask,
   back4App,
   // paypal,
   lookupLocationTask,

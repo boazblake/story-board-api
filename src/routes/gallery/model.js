@@ -28,7 +28,6 @@ const getAlbumByEncodedNameTask = encodedName =>
     .map(uniqWith(eqBy(prop("thumb"))))
 
 const getImageByIdTask = imageId => http.back4App.getTask({ url: `Classes/Gallery/${imageId}` })
-  .map(prop('results'))
 
 
 export { getGalleryTask, saveImagesTask, saveImageTask, deleteImageTask, getAlbumByEncodedNameTask, deleteImagesTask, getImageByIdTask }

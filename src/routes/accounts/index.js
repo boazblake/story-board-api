@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { findAccountByUserIdTask, updateAccountByAccountId } from './model.js'
+import { getErrorCode } from '../../utils.js'
 const router = Router()
 
 router.get('/:userId', (req, res) => {
@@ -9,7 +10,8 @@ router.get('/:userId', (req, res) => {
   const onSuccess = (account) => res.json(({ results: account }))
   const onError = (error) => {
     console.log('errror on get account', error)
-    return res.body = error
+    res.status(getErrorCode(error))
+    return res.json(error)
   }
 
   return findAccountByUserIdTask(encodedId).fork(onError, onSuccess)
@@ -22,7 +24,8 @@ router.put('/:accountId', (req, res) => {
   const onSuccess = (account) => { console.log('sx', account); res.json(({ results: account })) }
   const onError = (error) => {
     console.log('error on update account', error)
-    return res.body = error
+    res.status(getErrorCode(error))
+    return res.json(error)
   }
 
   return updateAccountByAccountId(accountId, account).fork(onError, onSuccess)

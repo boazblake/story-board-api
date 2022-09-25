@@ -15,7 +15,7 @@ const updateLocationByIdTask = (id, address) =>
   http.back4App.getTask({ url: `classes/Addresses/${id}`, body: address }).map(prop('results'))
 
 const getLocationByQuery = (query, encodedBounds) =>
-  http.openCageTask(query, encodedBounds).map(prop('results')).map(pluck('formatted'))
+  http.openCageTask(query, encodedBounds)
 
 export {
   getAddressByIdTask,

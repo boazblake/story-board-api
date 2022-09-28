@@ -1,9 +1,20 @@
 import http from '../../http.js'
-import { prop, reverse } from 'ramda'
+import { compose, prop, reverse, sortBy, propEq, map, over, lensProp } from 'ramda'
+import { formatDate } from '../../utils.js'
 
-const getBlogsTask = () => http.back4App.getTask({ url: `Classes/Blogs` }).map(prop('results')).map(reverse)
+const formatLensDate = (prpty) => over(lensProp(prpty), formatDate)
+
+const toViewModel = compose(
+  reverse,
+  sortBy(propEq("createdAt")),
+  map(compose(formatLensDate("updatedAt"), formatLensDate("createdAt")))
+)
+
+const getBlogsTask = () => http.back4App.getTask({ url: `Classes/Blogs` }).map(prop('results')).map(toViewModel)
 
 const findBlogByBlogIdTask = (blogId) => http.back4App.getTask({ url: `Classes/Blogs/${blogId}` })
+  .map(Array.of)
+  .map(toViewModel)
 
 const deleteBlogTask = (blogId) => http.back4App.deleteTask({ url: `Classes/Blogs/${blogId}` })
 

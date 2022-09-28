@@ -4,16 +4,15 @@ import { formatDate } from '../../utils.js'
 
 const formatLensDate = (prpty) => over(lensProp(prpty), formatDate)
 
-const toViewModel = compose(
-  reverse,
-  sortBy(propEq("createdAt")),
-  map(compose(formatLensDate("updatedAt"), formatLensDate("createdAt")))
-)
+const toViewModel = compose(formatLensDate("updatedAt"), formatLensDate("createdAt"))
 
-const getBlogsTask = () => http.back4App.getTask({ url: `Classes/Blogs` }).map(prop('results')).map(toViewModel)
+
+const getBlogsTask = () => http.back4App.getTask({ url: `Classes/Blogs` }).map(prop('results'))
+  .map(reverse)
+  .map(sortBy(propEq("createdAt")))
+  .map(map(toViewModel))
 
 const findBlogByBlogIdTask = (blogId) => http.back4App.getTask({ url: `Classes/Blogs/${blogId}` })
-  .map(Array.of)
   .map(toViewModel)
 
 const deleteBlogTask = (blogId) => http.back4App.deleteTask({ url: `Classes/Blogs/${blogId}` })

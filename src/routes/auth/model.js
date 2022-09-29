@@ -38,9 +38,12 @@ const getUsersTask = () => http.back4App.getTask({ url: `users` }).map(prop('res
 
 const updateUserTask = (userId, user) => http.back4App.putTask({ url: `users/${userId}`, body: JSON.stringify(user) })
 
+const resetPassword = (email) => http.back4App.postTask({ url: `requestPasswordReset`, body: JSON.stringify(email) })
+
+
 export {
   loginTask,
   getUserTask,
   getUserInfoTask,
-  registerTask, getUsersTask, updateUserTask
+  registerTask, getUsersTask, updateUserTask, resetPassword
 }

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { loginTask, getUserTask, registerTask, getUsersTask, updateUserTask } from './model.js'
+import { loginTask, getUserTask, registerTask, getUsersTask, updateUserTask, resetPassword } from './model.js'
 import { getErrorCode } from '../../utils.js'
 const router = Router();
 
@@ -45,6 +45,21 @@ router.post('/register', (req, res) => {
   }
 
   return registerTask(user).fork(onError, onSuccess)
+});
+
+router.post('/reset-password', (req, res) => {
+  const email = req.body
+
+  const onSuccess = () => {
+    // console.log('success on login', user)
+    return res.json(({ results: { message: 'A password reset request was sent to the email provided, please check your email to reset your password.' } }))
+  }
+  const onError = (error) => {
+    res.status(getErrorCode(error))
+    return res.json(error)
+  }
+
+  return resetPassword(email).fork(onError, onSuccess)
 });
 
 

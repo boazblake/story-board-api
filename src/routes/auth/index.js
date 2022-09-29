@@ -47,7 +47,7 @@ router.post('/register', (req, res) => {
   return registerTask(user).fork(onError, onSuccess)
 });
 
-router.post('/resetpassword', (req, res) => {
+router.post('/reset', (req, res) => {
   const email = req.body
 
   const onSuccess = () => {

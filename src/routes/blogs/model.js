@@ -8,8 +8,6 @@ const toViewModel = compose(formatLensDate("updatedAt"), formatLensDate("created
 
 
 const getBlogsTask = () => http.back4App.getTask({ url: `Classes/Blogs` }).map(prop('results'))
-  .map(reverse)
-  .map(sortBy(propEq("createdAt")))
   .map(map(toViewModel))
 
 const findBlogByBlogIdTask = (blogId) => http.back4App.getTask({ url: `Classes/Blogs/${blogId}` })

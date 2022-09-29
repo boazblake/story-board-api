@@ -58,7 +58,6 @@ router.post('/reset', (req, res) => {
     res.status(getErrorCode(error))
     return res.json(error)
   }
-  console.log('email', email)
   return resetPassword(email).fork(onError, onSuccess)
 });
 

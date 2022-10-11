@@ -14,8 +14,8 @@ router.get('/', (_, res) => {
   return getGalleryTask().fork(onError, onSuccess)
 })
 
-router.get('/:albumName', (req, res) => {
-  const album = req.params.albumName
+router.get('/album/', (req, res) => {
+  const album = req.query.name
   const encodedName = encodeURI(`where={"album":"${album}"}`)
   const onSuccess = (album) => res.json(({ results: album }))
   const onError = (error) => {

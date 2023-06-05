@@ -2,8 +2,8 @@ import http from '../../http.js'
 import Task from 'data.task'
 import { model } from '../../model.js'
 import { compose, map, chain, prop } from 'ramda'
-import { findAccountByUserIdTask } from '../accounts/model.js'
-import { findUserDuesByIdTask } from '../dues/model.js'
+import { findAccountByEncodedIdTask } from '../accounts/model.js'
+import { findUserDuesByEncodedIdTask } from '../dues/model.js'
 
 const updateState = (user) => {
   model.sessionToken = user.sessionToken
@@ -14,8 +14,8 @@ const updateState = (user) => {
 const getUserInfoTask = (user) => {
   const encodeId = encodeURI(`where={"userId":"${user.objectId}"}`)
   return Task.of((account) => (dues) => ({ user, account, dues }))
-    .ap(findAccountByUserIdTask(encodeId))
-    .ap(findUserDuesByIdTask(encodeId))
+    .ap(findAccountByEncodedIdTask(encodeId))
+    .ap(findUserDuesByEncodedIdTask(encodeId))
 }
 
 

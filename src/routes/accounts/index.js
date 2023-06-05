@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { findAccountByUserIdTask, updateAccountByAccountId } from './model.js'
+import { findAccountByEncodedIdTask, updateAccountByAccountId } from './model.js'
 import { getErrorCode } from '../../utils.js'
 const router = Router()
 
@@ -14,7 +14,7 @@ router.get('/:userId', (req, res) => {
     return res.json(error)
   }
 
-  return findAccountByUserIdTask(encodedId).fork(onError, onSuccess)
+  return findAccountByEncodedIdTask(encodedId).fork(onError, onSuccess)
 })
 
 router.put('/:accountId', (req, res) => {

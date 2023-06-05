@@ -2,7 +2,7 @@ import http from '../../http.js'
 import { prop, head } from 'ramda'
 import { log } from '../../utils.js'
 
-const findAccountByUserIdTask = (encodedId) =>
+const findAccountByEncodedIdTask = (encodedId) =>
   http.back4App.getTask({ url: `Classes/Accounts?${encodedId}` }).map(prop('results')).map(head)
 
 const createNewUserAccountTask = (user) => {
@@ -23,7 +23,7 @@ const createNewUserAccountTask = (user) => {
     })
 }
 
-const getUserAcountProfileById = (user, encodeId) =>
+const getUserAcountProfileByEncodedId = (user, encodeId) =>
   http.back4App
     .getTask({ url: `classes/Accounts?${encodeId}`, })
     .map(prop("results"))
@@ -38,7 +38,7 @@ const updateAccountByAccountId = (accountId, account) =>
 
 export {
   updateAccountByAccountId,
-  findAccountByUserIdTask,
+  findAccountByEncodedIdTask,
   createNewUserAccountTask,
-  getUserAcountProfileById
+  getUserAcountProfileByEncodedId
 }

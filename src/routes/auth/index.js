@@ -20,8 +20,8 @@ router.get('/isAuth', (req, res) => {
 router.post('/login', (req, res) => {
   const user = req.body
   const onSuccess = ({ account, user, dues }) => {
-    // console.log('success on login', model, { account, user, dues })
-    return res.json(({ results: { account, user, dues } }))
+
+    return res.json({ results: { account, user, dues } })
   }
   const onError = (error) => {
     console.log('error on login', error)

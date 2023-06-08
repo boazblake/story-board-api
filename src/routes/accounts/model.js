@@ -1,15 +1,10 @@
 import http from '../../http.js'
 import { prop, head } from 'ramda'
-import { log } from '../../utils.js'
 import Task from 'data.task/lib/task.js'
 
-const findAccountByEncodedUserIdOrCreateWithUserTask = (encodedUserId, user) => {
-  console.log('here?????')
-  return findAccountByEncodedUserIdTask(encodedUserId, user)
-}
 
 const findAccountByEncodedUserIdTask = (encodedId, user) =>
-  http.back4App.getTask({ url: `Classes/Accounts?${encodedId}` }).map(prop('results')).map(head).chain(x => x == undefined ? createNewUserAccountTask(user) : Task.of(x))
+  http.back4App.getTask({ url: `Classes/Accounts?${encodedId}` }).map(prop('results')).map(head).chain(x => x == undefined ? createNewUserAccountTask(user).map(head) : Task.of(x))
 
 const createNewUserAccountTask = (user) => {
   const account = {
@@ -47,5 +42,4 @@ export {
   findAccountByEncodedUserIdTask,
   createNewUserAccountTask,
   getUserAcountProfileByEncodedId,
-  findAccountByEncodedUserIdOrCreateWithUserTask
 }

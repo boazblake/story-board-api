@@ -2,7 +2,9 @@ import Logger from './logging.js'
 import cors from 'cors';
 import compression from 'compression'
 import express from 'express';
-import routes from './src/routes/index.js';
+import tracks from './src/routes/tracks/index.js';
+import images from './src/routes/images/index.js';
+import regions from './src/routes/regions/index.js';
 import { dotEnv } from './src/utils.js'
 import { model } from './src/model.js'
 
@@ -36,17 +38,14 @@ app.use((req, _, next) => {
 
 // * Routes * //
 
-app.use('/api/auth', routes.auth)
-app.use('/api/events', routes.events)
-app.use('/api/blogs', routes.blogs)
-app.use('/api/gallery', routes.gallery)
-app.use('/api/accounts', routes.accounts)
-app.use('/api/dues', routes.dues)
-app.use('/api/geo', routes.geo)
-// app.use('/users', routes.user);
-// app.use('/messages', routes.message);
+// app.use('/api/auth', auth)
+app.use('/api/tracks', tracks)
+app.use('/api/images', images)
+app.use('/api/regions', regions)
+// app.use('/users', user);
+// app.use('/messages', message);
 
 // * Start * //
 app.listen(process.env.PORT, () =>
-  console.log(`BACA API running on PORT ${process.env.PORT}!`),
+  console.log(`Story Board API running on PORT ${process.env.PORT}!`),
 );

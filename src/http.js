@@ -7,8 +7,8 @@ const env = process.env
 
 const BACK4APP_HEADERS = (cachCall) => ({
   "content-type": "application/json",
-  "X-Parse-Application-Id": env.BACK4APP_APPID,
-  "X-Parse-REST-API-Key": env.BACK4APP_APIKEY,
+  "X-Parse-Application-Id": env.PARSE_APPLICATION_ID,
+  "X-Parse-REST-API-Key": env.PARSE_REST_API_KEY,
   "X-Parse-Revocable-Session": 1,
   "X-Parse-Session-Token": model.sessionToken || "",
   ...cachCall,
@@ -53,20 +53,6 @@ const lookupLocationTask = (query) => {
   )
 }
 
-// const paypalUrl = `${PAYPAL.sandbox.baseUrl}/`
-// const paypal = {
-//   getTokenTask: (mdl) =>
-//     fetchTask(PAYPAL.sandbox.headers())("POST")(mdl)(
-//       paypalUrl + "v1/oauth2/token/"
-//     )(`grant_type=client_credentials`).map(updatePayPalAuth(mdl)),
-//   getTask: (mdl) => (url) =>
-//     fetchTask(PAYPAL.sandbox.headers(PAYPAL))("GET")(mdl)(paypalUrl + url)(null),
-//   postTask: (mdl) => (url) => (dto) =>
-//     fetchTask(PAYPAL.sandbox.headers(PAYPAL))("POST")(mdl)(paypalUrl + url)(dto),
-//   putTask: (mdl) => (url) => (dto) =>
-//     fetchTask(PAYPAL.sandbox.headers(PAYPAL))("PUT")(mdl)(paypalUrl + url)(dto),
-// }
-
 const cachCall = (url) =>
   url == "users/me"
     ? { "Cache-Control": "private" }
@@ -89,35 +75,8 @@ const back4App = {
 }
 
 
-const formatDeleteUrl = url => url.replace('https://ibb.co/', '').replace('/', '_')
-const toImageViewModel = album => ({ data: { delete_url, display_url, thumb: { url } } }) =>
-  ({ deleteUrl: formatDeleteUrl(delete_url), image: display_url, thumb: url, album })
-
-
-const imgBB = {
-  deleteTask: (url) => fetchTask({ url, method: "DELETE" }),
-  postTask: (album, file) => {
-    const image = new URLSearchParams()
-    image.append("image", file)
-    image.set("key", env.IMGBB_APIKEY)
-
-    return fetchTask({ url: `${env.IMGBB_URL}?key=${env.IMGBB_APIKEY}`, method: "POST", body: image })
-      .map(toImageViewModel(album))
-  },
-}
-
-const OpenCageUrl = (query, encodedBounds) =>
-  `${env.OPENCAGE_BASEURL}?key=${env.OPENCAGE_KEY}&q=${query}&pretty=1&countrycode=us&encodedBounds=${encodedBounds}`
-
-const openCageTask = (query, encodedBounds) =>
-  fetchTask({
-    url: OpenCageUrl(query, encodedBounds)
-  })
 const http = {
-  imgBB,
-  openCageTask,
   back4App,
-  // paypal,
   lookupLocationTask,
   fetchTask
 }

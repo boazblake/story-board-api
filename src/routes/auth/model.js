@@ -3,7 +3,7 @@ import Task from 'data.task'
 import { model } from '../../model.js'
 import { compose, map, chain, prop } from 'ramda'
 import { findAccountByEncodedUserIdTask } from '../accounts/model.js'
-import { findUserDuesByEncodedIdTask } from '../dues/model.js'
+// import { findUserDuesByEncodedIdTask } from '../dues/model.js'
 
 const updateState = (user) => {
   model.sessionToken = user.sessionToken
@@ -11,14 +11,14 @@ const updateState = (user) => {
   return user
 }
 
-const getUserInfoTask = (user) => {
-  const encodeId = encodeURI(`where={"userId":"${user.objectId}"}`)
-  return Task.of((account) => (dues) => {
-    return ({ user, account, dues })
-  })
-    .ap(findAccountByEncodedUserIdTask(encodeId, user))
-    .ap(findUserDuesByEncodedIdTask(encodeId))
-}
+// const getUserInfoTask = (user) => {
+//   const encodeId = encodeURI(`where={"userId":"${user.objectId}"}`)
+//   return Task.of((account) => (dues) => {
+//     return ({ user, account, dues })
+//   })
+//     .ap(findAccountByEncodedUserIdTask(encodeId, user))
+//     .ap(findUserDuesByEncodedIdTask(encodeId))
+// }
 
 
 const logUserInTask = (loginDto) => http.back4App.getTask({ url: `login?${loginDto}` })
@@ -26,7 +26,7 @@ const logUserInTask = (loginDto) => http.back4App.getTask({ url: `login?${loginD
 const toLoginDto = (LoginData) => encodeURI(`username=${LoginData.email}&password=${LoginData.password}`)
 
 const loginTask = compose(
-  chain(getUserInfoTask),
+  // chain(getUserInfoTask),
   map(updateState),
   logUserInTask,
   toLoginDto)
@@ -42,10 +42,9 @@ const updateUserTask = (userId, user) => http.back4App.putTask({ url: `users/${u
 
 const resetPassword = (email) => http.back4App.postTask({ url: `requestPasswordReset`, body: JSON.stringify(email) })
 
-
 export {
   loginTask,
   getUserTask,
-  getUserInfoTask,
+  // getUserInfoTask,
   registerTask, getUsersTask, updateUserTask, resetPassword
 }

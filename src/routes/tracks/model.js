@@ -1,5 +1,5 @@
 import http from '../../http.js'
-import { compose, prop, reverse, sortBy, propEq, map, over, lensProp } from 'ramda'
+import { compose, prop, map, over, lensProp } from 'ramda'
 import { formatDate } from '../../utils.js'
 
 const formatLensDate = (prpty) => over(lensProp(prpty), formatDate)

@@ -23,4 +23,5 @@ export {
 
 
 export const chunkString = str => chunk(str.split(), str.length)
+
 export const unchunkString = matrix => matrix.flat().join('')

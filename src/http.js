@@ -62,7 +62,7 @@ const cachCall = (url) =>
     }
 
 
-const toUrl = url => `${env.BACK4APP_BASEURL}/${url}`
+const toUrl = url => `${env.PARSE_API_URL}/${url}`
 
 const back4appHeaders = url => BACK4APP_HEADERS(cachCall(url))
 

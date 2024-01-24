@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getRegionsTask, findRegionByRegionIdTask, deleteRegionTask, createRegionPostTask, updateRegionPostTask } from './model.js'
+import { getRegionsTask, findRegionByRegionIdTask, deleteRegionTask, createRegionPostTask, updateRegionPostTask, findRegionsByTrackObjectIdTask } from './model.js'
 import { getErrorCode } from '../../utils.js'
 const router = Router()
 
@@ -54,7 +54,22 @@ router.get('/:region_id', (req, res) => {
     return res.json(error)
   }
 
-  return findRegionByRegionIdTask(RegionId).fork(onError, onSuccess)
+  return findRegionsByRegionIdTask(RegionId).fork(onError, onSuccess)
+})
+
+
+router.get('/byTrackObjectId/:track_object_id', (req, res) => {
+  const trackObjectId = req.params.track_object_id
+  
+  const onSuccess = (Region) => res.json(({ results: Region }))
+
+  const onError = (error) => {
+    console.log('errror on login', error)
+    res.status(getErrorCode(error))
+    return res.json(error)
+  }
+  
+  return findRegionsByTrackObjectIdTask(trackObjectId).fork(onError, onSuccess)
 })
 
 

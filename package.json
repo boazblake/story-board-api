@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "deploy": "git add .; git commit -m 'deploy'; git push;"
+    "deploy": "git add . ; git commit -m 'deploy'; git push;"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

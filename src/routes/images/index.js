@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getImagesTask, findImageByImageIdTask, deleteImageTask, createImagePostTask, updateImagePostTask } from './model.js'
+import { getImagesTask, findImageByImageIdTask, deleteImageTask, createImagePostTask, updateImagePostTask, findImagesByTrackObjectIdTask } from './model.js'
 import { getErrorCode } from '../../utils.js'
 const router = Router()
 
@@ -55,6 +55,20 @@ router.get('/:image_id', (req, res) => {
   }
 
   return findImageByImageIdTask(ImageId).fork(onError, onSuccess)
+})
+
+router.get('/byTrackObjectId/:track_object_id', (req, res) => {
+  const trackObjectId = req.params.track_object_id
+
+  const onSuccess = (Images) => res.json(({ results: Images }))
+
+  const onError = (error) => {
+    console.log('errror on login', error)
+    res.status(getErrorCode(error))
+    return res.json(error)
+  }
+
+  return findImagesByTrackObjectIdTask(trackObjectId).fork(onError, onSuccess)
 })
 
 
